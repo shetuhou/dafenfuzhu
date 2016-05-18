@@ -99,9 +99,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\P0.JPG" />
-  </ItemGroup>
-  <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
       <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
       <VersionMajor>2</VersionMajor>
@@ -129,6 +126,33 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\F0.JPG" />
+    <Content Include="Resources\F1.JPG" />
+    <Content Include="Resources\F2.JPG" />
+    <Content Include="Resources\F3.JPG" />
+    <Content Include="Resources\F4.JPG" />
+    <Content Include="Resources\O0.JPG" />
+    <Content Include="Resources\O1.JPG" />
+    <Content Include="Resources\O2.JPG" />
+    <Content Include="Resources\O3.JPG" />
+    <Content Include="Resources\O4.JPG" />
+    <None Include="Resources\P0.JPG" />
+    <Content Include="Resources\P1.JPG" />
+    <Content Include="Resources\P2.JPG" />
+    <Content Include="Resources\P3.JPG" />
+    <Content Include="Resources\P4.JPG" />
+    <Content Include="Resources\S0.JPG" />
+    <Content Include="Resources\S1.JPG" />
+    <Content Include="Resources\S2.JPG" />
+    <Content Include="Resources\S3.JPG" />
+    <Content Include="Resources\S4.JPG" />
+    <Content Include="Resources\T0.JPG" />
+    <Content Include="Resources\T1.JPG" />
+    <Content Include="Resources\T2.JPG" />
+    <Content Include="Resources\T3.JPG" />
+    <Content Include="Resources\T4.JPG" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

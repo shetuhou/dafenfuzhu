@@ -13,6 +13,7 @@ using System.Windows.Forms;
 
 namespace dafen
 {
+    using System.Resources;
     using MSExcel = Microsoft.Office.Interop.Excel;
     enum Weidu {P, O, F, S, T }
 
@@ -114,8 +115,7 @@ namespace dafen
             comboBox2.SelectedIndex = 0;
             comboBox3.SelectedIndex = 0;
             
-            switchWeidu();
-            switchPhoto();
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -178,7 +178,8 @@ namespace dafen
                 }
                 excelWb.SaveAs(fullFileName, nothing, nothing, nothing, nothing, nothing, MSExcel.XlSaveAsAccessMode.xlExclusive, nothing, nothing, nothing, nothing, nothing);
             }
-
+            switchWeidu();
+            switchPhoto();
 
         }
 
@@ -242,19 +243,40 @@ namespace dafen
 
         private void switchWeidu()
         {
-            //static Bitmap[] picData = new Bitmap[5, 5]
-            //{
-            //    {Resource1.P0, Resource1.P1, Resource1.P2, Resource1.P3, Resource1.P4},
 
-            //};
             label5.Text = desc[(int)currentWeidu];
             if (currentWeidu == Weidu.T)
                 button2.Visible = true;
             else
                 button2.Visible = false;
 
-            
-            //pictureBox1.Image = Resource1.P0;
+            ResourceManager manager = new ResourceManager(typeof(Resource1));
+            string resName;
+
+            resName = currentWeidu.ToString() + 0;
+            if (pictureBox1.Image != null)
+                pictureBox1.Image.Dispose();
+            pictureBox1.Image = (Image)manager.GetObject(resName);
+
+            resName = currentWeidu.ToString() + 1;
+            if (pictureBox2.Image != null)
+                pictureBox2.Image.Dispose();
+            pictureBox2.Image = (Image)manager.GetObject(resName);
+
+            resName = currentWeidu.ToString() + 2;
+            if (pictureBox3.Image != null)
+                pictureBox3.Image.Dispose();
+            pictureBox3.Image = (Image)manager.GetObject(resName);
+
+            resName = currentWeidu.ToString() + 3;
+            if (pictureBox4.Image != null)
+                pictureBox4.Image.Dispose();
+            pictureBox4.Image = (Image)manager.GetObject(resName);
+
+            resName = currentWeidu.ToString() + 4;
+            if (pictureBox5.Image != null)
+                pictureBox5.Image.Dispose();
+            pictureBox5.Image = (Image)manager.GetObject(resName);
         }
 
         private void switchPhoto()
@@ -276,13 +298,15 @@ namespace dafen
                     photoOffset = currentPosition * 2 + 2;
                     break;
             }
-            pictureBox6.Image.Dispose();
+            if (pictureBox6.Image != null)
+                pictureBox6.Image.Dispose();
             try
             {
                 pictureBox6.Image = Image.FromFile(foldPath + "/" + fileList[userList[currentUserId]][photoOffset]);
             }
             catch (Exception ex)
             {
+                pictureBox6.Image = null;
                 Console.WriteLine(ex);
             }
             
