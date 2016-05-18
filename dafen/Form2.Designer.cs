@@ -46,9 +46,11 @@
             // 
             this.label1.Location = new System.Drawing.Point(37, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(169, 54);
+            this.label1.Size = new System.Drawing.Size(235, 79);
             this.label1.TabIndex = 1;
-            this.label1.Text = "说明性文字，巴拉巴拉";
+            this.label1.Text = "1.保证照片命名形式为20160411_10_05.JPG，部分照片没有照此格式，请手动更改\r\n2.电脑中必须装有excel，结果文件保存于照片文件夹下。建议" +
+    "不要手动修改结果文件。";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Form2
             // 

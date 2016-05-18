@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -12,12 +13,21 @@ using System.Windows.Forms;
 
 namespace dafen
 {
+    using MSExcel = Microsoft.Office.Interop.Excel;
     enum Weidu {P, O, F, S, T }
 
+
+    
     
 
     public partial class Form1 : Form
     {
+        const string fileName = "scores.xlsx";
+        string fullFileName;
+        MSExcel.Workbook excelWb;
+        MSExcel.Application appExcel = new MSExcel.Application();
+        MSExcel.Worksheet excelWs;
+
         string[] desc = new string[5]{
             "色素\r\n0 无可辨色素斑\r\n1 可见1-2个点状色素斑\r\n2 可见较多点状色素斑或小片状色素网\r\n3 可见大片色素网，存在小片无色素沉着区域\r\n4 可见粗大色素带，或弥漫色素网",
             "油光\r\n0 可见较多环形鳞屑(白色圆形)\r\n1 可见少量环形鳞屑或色泽暗淡\r\n2 可见细小油光闪烁(白色小点)\r\n3 可见较多油光闪烁(白色不规则片)\r\n4 较多油脂浸润区",
@@ -34,8 +44,10 @@ namespace dafen
         int currentPosition;
         Weidu currentWeidu;
         string foldPath;
+        int photoOffset;
 
-        
+
+
         public Form1()
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
@@ -48,11 +60,11 @@ namespace dafen
                     DirectoryInfo TheFolder = new DirectoryInfo(foldPath);
                     foreach (FileInfo NextFile in TheFolder.GetFiles())
                     {
-                        Regex reg = new Regex("([0-9]+).*?([0-9]+).*?([0-9]+).JPG");
+                        Regex reg = new Regex("([0-9]+)[^0-9]+?([0-9]+)[^0-9]+?([0-9]+)\\.JPG");
                         Match match = reg.Match(NextFile.Name);
                         if (match.Success)
                         {
-                            string userId = match.Groups[2].Value;
+                            string userId = int.Parse(match.Groups[2].Value).ToString();
                             string photoId = match.Groups[3].Value;
                             if (userList.Contains(userId) == false)
                             {
@@ -84,7 +96,9 @@ namespace dafen
                         System.Environment.Exit(0);
                     }
                     catch (Exception ex)
-                    { }
+                    {
+                        Console.WriteLine(ex);
+                    }
                 }
 
             }
@@ -94,17 +108,77 @@ namespace dafen
             currentUserId = 0;
             currentUser = userList[currentUserId];
             currentWeidu = Weidu.P;
-            pictureBox6.Image = Image.FromFile(foldPath + "/" + fileList[currentUser][currentPosition + 1]);
+            
             comboBox1.SelectedIndex = 0;
             comboBox2.DataSource = userList;
             comboBox2.SelectedIndex = 0;
             comboBox3.SelectedIndex = 0;
-            label5.Text = desc[(int)currentWeidu];
+            
+            switchWeidu();
+            switchPhoto();
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-            
+        {          
+            if (appExcel == null)
+            {
+                MessageBox.Show("Excel没有安装，结果无法保存!!");
+                this.Close();
+                return;
+            }
+            appExcel.DisplayAlerts = false;
+
+            fullFileName = foldPath + "/" + fileName;
+            Object nothing = Missing.Value;
+            if (File.Exists(fullFileName))
+            {
+                excelWb = appExcel.Workbooks.Open(fullFileName);
+
+                excelWs = excelWb.Worksheets[1];
+
+                MSExcel.Range range = excelWs.UsedRange;
+
+                for (int rCnt = 2; rCnt <= range.Rows.Count; rCnt++)
+                {
+                    for (int cCnt = 2; cCnt < 2 + 10; cCnt++)
+                    {
+                        string dataStr = ((MSExcel.Range)excelWs.Cells[rCnt, cCnt]).Text.ToString();
+
+                        int offset;
+                        int score;
+
+                        for (Weidu cWd = Weidu.P; cWd < Weidu.T; cWd = cWd + 1)
+                        {
+                            offset = dataStr.ToUpper().IndexOf(cWd.ToString());
+                            if (offset < 0)
+                                continue;
+                            score = int.Parse(dataStr.Substring(offset + 1, 1));
+                            scoreList[((MSExcel.Range)excelWs.Cells[rCnt, 1]).Text.ToString()][(int)cWd, cCnt - 2] = score;
+                        }
+                        
+                    }
+                }
+                //excelWb.Save();
+                
+            }
+            else
+            {              
+                excelWb = appExcel.Workbooks.Add(nothing);
+                Object format = MSExcel.XlFileFormat.xlWorkbookDefault;
+
+                excelWs = excelWb.Worksheets[1];
+                excelWs.Cells[1, 1] = "用户编号";
+
+                for (int i = 0; i < 10; i++)
+                    excelWs.Cells[1, i+2] = "位置" + (i+1);
+
+                for (int i = 0; i < userList.Count; i++)
+                {
+                    excelWs.Cells[i + 2, 1] = userList[i];
+                }
+                excelWb.SaveAs(fullFileName, nothing, nothing, nothing, nothing, nothing, MSExcel.XlSaveAsAccessMode.xlExclusive, nothing, nothing, nothing, nothing, nothing);
+            }
+
 
         }
 
@@ -151,13 +225,41 @@ namespace dafen
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
             scoreList[userList[currentUserId]][(int)currentWeidu,currentPosition] = comboBox4.SelectedIndex;
-            
+            string tmpStr = ((MSExcel.Range)excelWs.Cells[currentUserId + 2, currentPosition + 2]).Text.ToString();
+            string resStr;
+            int offset = tmpStr.IndexOf(currentWeidu.ToString());
+            if (offset < 0)
+            {
+                resStr = tmpStr + currentWeidu.ToString() + comboBox4.SelectedIndex;
+            }
+            else
+            {
+                resStr = tmpStr.Substring(0, offset) + currentWeidu.ToString() + comboBox4.SelectedIndex + tmpStr.Substring(offset + 2);
+            }
+            excelWs.Cells[currentUserId + 2, currentPosition + 2] = resStr;
 
+        }   
+
+        private void switchWeidu()
+        {
+            //static Bitmap[] picData = new Bitmap[5, 5]
+            //{
+            //    {Resource1.P0, Resource1.P1, Resource1.P2, Resource1.P3, Resource1.P4},
+
+            //};
+            label5.Text = desc[(int)currentWeidu];
+            if (currentWeidu == Weidu.T)
+                button2.Visible = true;
+            else
+                button2.Visible = false;
+
+            
+            //pictureBox1.Image = Resource1.P0;
         }
 
         private void switchPhoto()
         {
-            int photoOffset = 0;
+            photoOffset = 0;
 
             comboBox1.SelectedIndex = (int)currentWeidu;
             comboBox2.SelectedIndex = currentUserId;
@@ -175,7 +277,15 @@ namespace dafen
                     break;
             }
             pictureBox6.Image.Dispose();
-            pictureBox6.Image = Image.FromFile(foldPath + "/" + fileList[currentUser][photoOffset]);
+            try
+            {
+                pictureBox6.Image = Image.FromFile(foldPath + "/" + fileList[userList[currentUserId]][photoOffset]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            
             if (scoreList[userList[currentUserId]][(int)currentWeidu,currentPosition] > 4)
                 comboBox4.Text = "";
             else
@@ -204,8 +314,8 @@ namespace dafen
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentWeidu = (Weidu)comboBox1.SelectedIndex;
-            label5.Text = desc[(int)currentWeidu];
             switchPhoto();
+            switchWeidu();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -232,7 +342,7 @@ namespace dafen
                         //end!!!!
                         currentWeidu = Weidu.P;
                     }
-                    label5.Text = desc[(int)currentWeidu];
+                    switchWeidu();
                 }
             }
             switchPhoto();
@@ -241,7 +351,16 @@ namespace dafen
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            excelWb.Save();
+            excelWb.Close();
+            appExcel.Quit();
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            pictureBox6.Image.Dispose();
+            photoOffset = photoOffset - 1 + (photoOffset % 2) * 2;
+            pictureBox6.Image = Image.FromFile(foldPath + "/" + fileList[currentUser][photoOffset]);
         }
     }
 }
