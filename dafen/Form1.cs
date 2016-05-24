@@ -337,7 +337,14 @@ namespace dafen
             else
                 comboBox4.SelectedIndex = scoreList[userList[currentUserId]][(int)currentWeidu, currentPosition];
 
-            label11.Text = fileList[userList[currentUserId]][photoOffset];
+            try {
+                label11.Text = fileList[userList[currentUserId]][photoOffset];
+            }
+            catch (Exception ex)
+            {
+                label11.Text = "图片不存在";
+                Console.WriteLine(ex);
+            }
 
         }
 
@@ -388,6 +395,7 @@ namespace dafen
                     {
                         //end!!!!
                         currentWeidu = Weidu.P;
+                        MessageBox.Show("已经是最后一张");
                     }
                     switchWeidu();
                 }
@@ -470,7 +478,7 @@ namespace dafen
         private void small_DoubleClick(object sender, EventArgs e)
         {
             Form3 f3 = new Form3(((PictureBox)sender).Image);
-            this.Hide();
+            //this.Hide();
             f3.ShowDialog();
             this.Show();
         }
