@@ -46,17 +46,17 @@
             // 
             this.label1.Location = new System.Drawing.Point(37, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(235, 79);
+            this.label1.Size = new System.Drawing.Size(355, 79);
             this.label1.TabIndex = 1;
-            this.label1.Text = "1.保证照片命名形式为20160411_10_05.JPG，部分照片没有照此格式，请手动更改\r\n2.电脑中必须装有excel，结果文件保存于照片文件夹下。建议" +
-    "不要手动修改结果文件。";
+            this.label1.Text = "1.保证照片命名形式为20160411_10_05.JPG，部分照片没有照此格式，请手动更改\r\n2.电脑中必须装有excel，结果文件保存于照片文件夹下。建议不要" +
+    "手动修改结果文件。\r\n3.双击图片弹出窗口查看大图，双击大图返回打分界面。";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(407, 261);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Name = "Form2";

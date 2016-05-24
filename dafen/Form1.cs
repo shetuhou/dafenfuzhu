@@ -176,6 +176,12 @@ namespace dafen
                 {
                     excelWs.Cells[i + 2, 1] = userList[i];
                 }
+
+                for (int i = 1; i < 10; i++)
+                    for (int j = 1; j < userList.Count; j++)
+                    {
+                        excelWs.Cells[j + 1, i + 1] = "";
+                    }
                 excelWb.SaveAs(fullFileName, nothing, nothing, nothing, nothing, nothing, MSExcel.XlSaveAsAccessMode.xlExclusive, nothing, nothing, nothing, nothing, nothing);
             }
             switchWeidu();
@@ -225,8 +231,24 @@ namespace dafen
 
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (comboBox4.SelectedIndex < 0)
+                return;
             scoreList[userList[currentUserId]][(int)currentWeidu,currentPosition] = comboBox4.SelectedIndex;
-            string tmpStr = ((MSExcel.Range)excelWs.Cells[currentUserId + 2, currentPosition + 2]).Text.ToString();
+            string tmpStr;
+
+            try
+            {
+                tmpStr = ((MSExcel.Range)excelWs.Cells[currentUserId + 2, currentPosition + 2]).Text.ToString();
+            }
+            catch (Exception ex)
+            {
+                excelWb = appExcel.Workbooks.Open(fullFileName);
+
+                excelWs = excelWb.Worksheets[1];
+                tmpStr = ((MSExcel.Range)excelWs.Cells[currentUserId + 2, currentPosition + 2]).Text.ToString();
+            }
+            
+            
             string resStr;
             int offset = tmpStr.IndexOf(currentWeidu.ToString());
             if (offset < 0)
@@ -238,7 +260,7 @@ namespace dafen
                 resStr = tmpStr.Substring(0, offset) + currentWeidu.ToString() + comboBox4.SelectedIndex + tmpStr.Substring(offset + 2);
             }
             excelWs.Cells[currentUserId + 2, currentPosition + 2] = resStr;
-
+            excelWb.Save();
         }   
 
         private void switchWeidu()
@@ -311,9 +333,9 @@ namespace dafen
             }
             
             if (scoreList[userList[currentUserId]][(int)currentWeidu,currentPosition] > 4)
-                comboBox4.Text = "";
+                comboBox4.SelectedIndex = -1;
             else
-                comboBox4.Text = scoreList[userList[currentUserId]][(int)currentWeidu, currentPosition].ToString();
+                comboBox4.SelectedIndex = scoreList[userList[currentUserId]][(int)currentWeidu, currentPosition];
 
             label11.Text = fileList[userList[currentUserId]][photoOffset];
 
@@ -376,8 +398,15 @@ namespace dafen
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            excelWb.Save();
-            excelWb.Close();
+            try
+            {
+                excelWb.Save();
+                excelWb.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
             appExcel.Quit();
         }
 
@@ -432,6 +461,18 @@ namespace dafen
             //process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             //process.Start();
             //process.Close();
+            Form3 f3 = new Form3(pictureBox6.Image);
+            this.Hide();
+            f3.ShowDialog();
+            this.Show();
+        }
+
+        private void small_DoubleClick(object sender, EventArgs e)
+        {
+            Form3 f3 = new Form3(((PictureBox)sender).Image);
+            this.Hide();
+            f3.ShowDialog();
+            this.Show();
         }
     }
 }
