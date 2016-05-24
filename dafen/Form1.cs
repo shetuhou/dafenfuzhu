@@ -315,6 +315,7 @@ namespace dafen
             else
                 comboBox4.Text = scoreList[userList[currentUserId]][(int)currentWeidu, currentPosition].ToString();
 
+            label11.Text = fileList[userList[currentUserId]][photoOffset];
 
         }
 
@@ -385,6 +386,52 @@ namespace dafen
             pictureBox6.Image.Dispose();
             photoOffset = photoOffset - 1 + (photoOffset % 2) * 2;
             pictureBox6.Image = Image.FromFile(foldPath + "/" + fileList[currentUser][photoOffset]);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //get next
+            if (currentPosition > 0)
+                currentPosition--;
+            else
+            {
+                currentPosition = 9;
+                if (currentUserId > 0)
+                {
+                    currentUserId--;
+                }
+                else
+                {
+                    currentUserId = userList.Count - 1;
+                    if (currentWeidu > Weidu.P)
+                    {
+                        currentWeidu = currentWeidu - 1;
+                    }
+                    else
+                    {
+                        //end!!!!
+                        currentWeidu = Weidu.T;
+                    }
+                    switchWeidu();
+                }
+            }
+            switchPhoto();
+        }
+
+        private void pictureBox6_DoubleClick(object sender, EventArgs e)
+        {
+            ////建立新的系统进程  
+            //System.Diagnostics.Process process = new System.Diagnostics.Process();
+            ////设置文件名，此处为图片的真实路径+文件名  
+            //process.StartInfo.FileName = foldPath + "/" + fileList[currentUser][photoOffset];
+            ////此为关键部分。设置进程运行参数，此时为最大化窗口显示图片。  
+            //process.StartInfo.Arguments = "rundll32.exe C://WINDOWS//system32//shimgvw.dll,ImageView_Fullscreen";
+            ////此项为是否使用Shell执行程序，因系统默认为true，此项也可不设，但若设置必须为true  
+            //process.StartInfo.UseShellExecute = true;
+            ////此处可以更改进程所打开窗体的显示样式，可以不设  
+            //process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            //process.Start();
+            //process.Close();
         }
     }
 }

@@ -60,6 +60,8 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -142,6 +144,7 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.label11);
             this.panel1.Controls.Add(this.button2);
             this.panel1.Controls.Add(this.pictureBox6);
             this.panel1.Location = new System.Drawing.Point(229, 4);
@@ -175,9 +178,11 @@
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox6.TabIndex = 1;
             this.pictureBox6.TabStop = false;
+            this.pictureBox6.DoubleClick += new System.EventHandler(this.pictureBox6_DoubleClick);
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.button3);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.comboBox4);
             this.panel2.Controls.Add(this.label4);
@@ -449,6 +454,25 @@
             this.pictureBox4.TabIndex = 0;
             this.pictureBox4.TabStop = false;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 4);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(47, 12);
+            this.label11.TabIndex = 3;
+            this.label11.Text = "label11";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(121, 115);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 9;
+            this.button3.Text = " 上一个";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -465,6 +489,7 @@
             this.panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -518,6 +543,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button button3;
     }
 }
 
