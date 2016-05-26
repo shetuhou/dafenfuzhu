@@ -49,7 +49,7 @@
             this.label1.Size = new System.Drawing.Size(355, 79);
             this.label1.TabIndex = 1;
             this.label1.Text = "1.保证照片命名形式为20160411_10_05.JPG，部分照片没有照此格式，请手动更改\r\n2.电脑中必须装有excel，结果文件保存于照片文件夹下。建议不要" +
-    "手动修改结果文件。\r\n3.双击图片弹出窗口查看大图，双击大图返回打分界面。";
+    "手动修改结果文件。\r\n3.双击图片弹出窗口查看大图，双击大图以原始尺寸查看，再次双击返回自适应尺寸。";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // Form2

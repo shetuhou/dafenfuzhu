@@ -469,17 +469,17 @@ namespace dafen
             //process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
             //process.Start();
             //process.Close();
-            Form3 f3 = new Form3(pictureBox6.Image);
-            this.Hide();
-            f3.ShowDialog();
+            Form4 f4 = new Form4(pictureBox6.Image);
+            //this.Hide();
+            f4.ShowDialog();
             this.Show();
         }
 
         private void small_DoubleClick(object sender, EventArgs e)
         {
-            Form3 f3 = new Form3(((PictureBox)sender).Image);
+            Form4 f4 = new Form4(((PictureBox)sender).Image);
             //this.Hide();
-            f3.ShowDialog();
+            f4.ShowDialog();
             this.Show();
         }
     }
